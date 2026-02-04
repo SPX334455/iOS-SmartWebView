@@ -39,7 +39,7 @@ class WebViewStore: ObservableObject {
 
         self.preziView = WKWebView(frame: CGRect(x: 0, y: 0, width: 1280, height: 720))
         // BURAYA KENDİ LİNKİNİ YAZ
-        let preziURL = "https://prezi.com/view/KENDI_LINKIN_BURAYA/" 
+        let preziURL = "https://prezi.com/p/wckx0wlz288z/omegle-game-includes-kinks/" 
         self.preziView.load(URLRequest(url: URL(string: preziURL)!))
     }
 }
