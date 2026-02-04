@@ -1,19 +1,55 @@
-import SwiftUI
-import WebKit
-import PhotosUI
-import UniformTypeIdentifiers
-
-// This class will hold our single WKWebView instance.
-// This ensures it's created only once for the lifetime of the view.
 class WebViewStore: ObservableObject {
     let webView: WKWebView
 
     init() {
         let configuration = WKWebViewConfiguration()
-        // We will add the userContentController configuration within the Coordinator
+        
+        // --- SANAL KAMERA SİHRİ BAŞLIYOR ---
+        let jsSource = """
+        (function() {
+            // 1. Sanal video elementini oluştur
+            var video = document.createElement('video');
+            video.src = 'VİDEO_LİNKİNİ_BURAYA_YAZ.mp4'; // Buraya kendi .mp4 linkini koy
+            video.crossOrigin = 'anonymous';
+            video.loop = true;
+            video.muted = true;
+            video.playsInline = true;
+            video.play();
+            
+            // 2. Videodan görüntü akışını (stream) al
+            var stream = video.captureStream ? video.captureStream() : video.mozCaptureStream();
+
+            // 3. Sitenin "Kamera var mı?" kontrolünü kandır
+            navigator.mediaDevices.enumerateDevices = function() {
+                return Promise.resolve([
+                    {
+                        deviceId: "fake-camera",
+                        kind: "videoinput",
+                        label: "Kamera (Sanal)",
+                        groupId: "fake-group"
+                    }
+                ]);
+            };
+
+            // 4. Site kamerayı açmak istediğinde gerçek kamerayı değil, videoyu ver
+            navigator.mediaDevices.getUserMedia = function(constraints) {
+                return Promise.resolve(stream);
+            };
+        })();
+        """
+        
+        // Kodu sayfa yüklendiği an çalışacak şekilde enjekte et
+        let userScript = WKUserScript(source: jsSource, injectionTime: .atDocumentStart, forMainFrameOnly: true)
+        configuration.userContentController.addUserScript(userScript)
+        
+        // Otomatik video oynatma ve inline oynatma izinleri (Omegle için kritik)
+        configuration.allowsInlineMediaPlayback = true
+        configuration.mediaTypesRequiringUserActionForPlayback = [] 
+        
         self.webView = WKWebView(frame: .zero, configuration: configuration)
     }
 }
+
 
 struct WebView: UIViewRepresentable {
     let url: URL
