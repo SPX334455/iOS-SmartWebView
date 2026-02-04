@@ -18,9 +18,6 @@ jobs:
       with:
         xcode-version: latest-stable
 
-    - name: List Schemes (Hata Ayıklama İçin)
-      run: xcodebuild -list
-
     - name: Build unsigned archive
       run: |
         xcodebuild clean archive \
@@ -35,7 +32,7 @@ jobs:
     - name: Export unsigned IPA
       run: |
         mkdir -p build/ipa/Payload
-        cp -R build/iOS-SmartWebView.xcarchive/Products/Applications/*.app build/ipa/Payload/ 2>/dev/null || cp -R build/iOS-SmartWebView.xcarchive/Products/Applications/*.app build/ipa/Payload/
+        cp -R build/iOS-SmartWebView.xcarchive/Products/Applications/*.app build/ipa/Payload/
         cd build/ipa
         zip -r SmartWebView-UNSIGNED.ipa Payload
 
