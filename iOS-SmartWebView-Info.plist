@@ -7,4 +7,8 @@
 		<string>remote-notification</string>
 	</array>
 </dict>
+<key>NSCameraUsageDescription</key>
+<string>Kamera erişimi sanal yayın için gereklidir.</string>
+<key>NSMicrophoneUsageDescription</key>
+<string>Mikrofon erişimi ses iletimi için gereklidir.</string>
 </plist>
